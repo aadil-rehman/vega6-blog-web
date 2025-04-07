@@ -15,10 +15,10 @@ function App() {
 				<Routes>
 					<Route path="/" element={<Home />}>
 						<Route path="/login" element={<Login />}></Route>
-						<Route path="/feed" element={<FeedBlogs />}></Route>
+						<Route path="/" element={<FeedBlogs />}></Route>
 						<Route path="/myblogs" element={<MyBlogs />}></Route>
-						<Route path="/blog/:id" element={<Blog />}></Route>
 						<Route path="/profile" element={<Profile />}></Route>
+						<Route path="/blog/view/:blogId" element={<Blog />}></Route>
 					</Route>
 				</Routes>
 			</BrowserRouter>
