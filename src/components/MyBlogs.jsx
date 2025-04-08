@@ -4,6 +4,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addMyFeed } from "../utils/myFeedSlice";
 import BlogsTableRow from "./BlogsTableRow";
+import Loader from "./Loader";
 
 const MyBlogs = () => {
 	const dispatch = useDispatch();
@@ -25,13 +26,10 @@ const MyBlogs = () => {
 		getMyFeed();
 	}, []);
 
-	if (!myfeed) return <h1>Loading....</h1>;
+	if (!myfeed) return <Loader />;
 	return (
 		<div className="w-[50vw] mx-auto">
-			<ul className="list bg-base-100 rounded-box shadow-md">
-				<li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
-					Most played songs this week
-				</li>
+			<ul className="list bg-base-100 rounded-box shadow-md mt-5">
 				{myfeed.map((blog) => (
 					<BlogsTableRow key={blog._id} blog={blog} myblog={true} />
 				))}

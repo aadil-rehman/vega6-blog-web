@@ -7,6 +7,7 @@ import Profile from "./components/Profile";
 import Login from "./components/Login";
 import { Provider } from "react-redux";
 import store from "./utils/store";
+import EditBlog from "./components/EditBlog";
 
 function App() {
 	return (
@@ -19,6 +20,7 @@ function App() {
 						<Route path="/myblogs" element={<MyBlogs />}></Route>
 						<Route path="/profile" element={<Profile />}></Route>
 						<Route path="/blog/view/:blogId" element={<Blog />}></Route>
+						<Route path="/blog/edit/:blogId" element={<EditBlog />}></Route>
 					</Route>
 				</Routes>
 			</BrowserRouter>
