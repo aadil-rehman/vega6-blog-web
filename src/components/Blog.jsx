@@ -1,34 +1,71 @@
 import axios, { all } from "axios";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
 	ChatBubbleOvalLeftIcon,
 	HeartIcon,
 	PaperAirplaneIcon,
+	PencilSquareIcon,
 } from "@heroicons/react/24/outline";
+
+import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
+
 import Loader from "./Loader";
+import { useSelector } from "react-redux";
 
 const Blog = () => {
 	const [blog, setBlog] = useState(null);
 	const [allComments, setAllComments] = useState(null);
 	const [dropComment, setDropComment] = useState("");
-	const [refresh, setRefresh] = useState(false);
+	const [refreshComments, setRefreshComments] = useState(false);
+	const [refreshLikes, setRefreshLikes] = useState(false);
+	const [numOfLikes, setNumOfLikes] = useState(null);
+	const [currLikeObj, setCurrLikeObj] = useState(null);
 
 	const { blogId } = useParams();
+	const navigate = useNavigate();
+
+	const user = useSelector((store) => store.user);
+	const IsMyBlog =
+		blog?.authorId?._id?.toString?.() === user?._id?.toString?.();
+
 	const getBlog = async () => {
-		const res = await axios.get(BASE_URL + `/blog/view/${blogId}`, {
-			withCredentials: true,
-		});
-		setBlog(res?.data?.data);
+		try {
+			const res = await axios.get(BASE_URL + `/blog/view/${blogId}`, {
+				withCredentials: true,
+			});
+			setBlog(res?.data?.data);
+		} catch (err) {
+			console.error(err);
+		}
 	};
 
 	const fetchComments = async () => {
-		const res = await axios.get(BASE_URL + `/comments/view/${blogId}`, {
-			withCredentials: true,
-		});
-		setAllComments(res?.data?.data);
-		setRefresh(false);
+		try {
+			const res = await axios.get(BASE_URL + `/comments/view/${blogId}`, {
+				withCredentials: true,
+			});
+			setAllComments(res?.data?.data);
+			setRefreshComments(false);
+		} catch (err) {
+			console.error(err);
+			setRefreshComments(false);
+		}
+	};
+
+	const fetchLikes = async () => {
+		try {
+			const res = await axios.get(BASE_URL + `/likes/view/${blogId}`, {
+				withCredentials: true,
+			});
+			setNumOfLikes(res?.data?.numberOfLikes);
+			setCurrLikeObj(res?.data?.like);
+			setRefreshLikes(false);
+		} catch (err) {
+			console.error(err);
+			setRefreshLikes(false);
+		}
 	};
 
 	useEffect(() => {
@@ -37,20 +74,47 @@ const Blog = () => {
 
 	useEffect(() => {
 		fetchComments();
-	}, [refresh]);
+	}, [refreshComments]);
+
+	useEffect(() => {
+		fetchLikes();
+	}, [refreshLikes]);
+
+	const hadleEditBlog = () => {
+		navigate(`/blog/edit/${blog._id}`);
+	};
 
 	const handleAddComment = async () => {
 		if (!dropComment) return;
-		const res = await axios.post(
-			BASE_URL + `/comments/create/${blogId}`,
-			{
-				message: dropComment,
-			},
-			{ withCredentials: true }
-		);
-		allComments.push(res?.data?.comment);
-		setDropComment("");
-		setRefresh(true);
+		try {
+			const res = await axios.post(
+				BASE_URL + `/comments/create/${blogId}`,
+				{
+					message: dropComment,
+				},
+				{ withCredentials: true }
+			);
+			allComments.push(res?.data?.comment);
+			setDropComment("");
+			setRefreshComments(true);
+		} catch (err) {
+			console.error(err);
+		}
+	};
+
+	const handleLike = async () => {
+		try {
+			const res = await axios.post(
+				BASE_URL + `/likes/create/${blogId}`,
+				{},
+				{ withCredentials: true }
+			);
+			console.log(res);
+			setCurrLikeObj(res?.data?.data);
+			setRefreshLikes(true);
+		} catch (err) {
+			console.error(err);
+		}
 	};
 
 	return (
@@ -78,8 +142,14 @@ const Blog = () => {
 							</h1>
 							<div className="flex gap-4 items-center text-sm">
 								<span className="flex gap-1 items-center">
-									<p className="text-xs">1</p>
-									<HeartIcon className="w-5 h-5 cursor-pointer" />
+									<p className="text-xs">{numOfLikes}</p>
+									<button onClick={handleLike}>
+										{currLikeObj && currLikeObj.likeStatus === "like" ? (
+											<HeartIconSolid className="w-5 h-5 cursor-pointer text-red-500" />
+										) : (
+											<HeartIcon className="w-5 h-5 cursor-pointer" />
+										)}
+									</button>
 								</span>
 								<span className="flex gap-1 items-center">
 									<p className="text-xs">{allComments && allComments.length}</p>
@@ -87,7 +157,17 @@ const Blog = () => {
 								</span>
 							</div>
 						</div>
-						<h1 className="text-lg font-bold">{blog.blogTitle}</h1>
+						<div className="flex gap-4 items-center">
+							<h1 className="text-lg font-bold">{blog.blogTitle}</h1>
+							{IsMyBlog && (
+								<button
+									className="btn btn-square btn-ghost"
+									onClick={hadleEditBlog}
+								>
+									<PencilSquareIcon className="h-5 w-5" />
+								</button>
+							)}
+						</div>
 						<p className="text-sm opacity-85">{blog.blogDescription}</p>
 					</div>
 				</div>

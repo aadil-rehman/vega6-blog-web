@@ -18,9 +18,9 @@ const Login = () => {
 				{ emailId, password },
 				{ withCredentials: true }
 			);
-			console.log(res);
 			dispatch(addUser(res?.data?.data));
 			navigate("/");
+			window.location.reload();
 		} catch (err) {
 			console.error("Error" + err);
 		}

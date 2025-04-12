@@ -51,7 +51,7 @@ const Navbar = () => {
 								<Link to="/myblogs">My Blogs</Link>
 							</li>
 							<li>
-								<Link to="/profile">Profile</Link>
+								<Link to="/blog/create">Create Blog</Link>
 							</li>
 							<li>
 								<Link onClick={handleLogout}>
