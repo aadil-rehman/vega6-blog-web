@@ -21,7 +21,7 @@ const MyBlogs = () => {
 			console.error(err);
 		}
 	};
-	console.log(myfeed);
+
 	useEffect(() => {
 		getMyFeed();
 	}, []);

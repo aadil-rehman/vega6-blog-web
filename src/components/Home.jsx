@@ -18,7 +18,6 @@ const Home = () => {
 			const res = await axios.get(BASE_URL + "/profile", {
 				withCredentials: true,
 			});
-			console.log(res);
 			dispatch(addUser(res?.data?.data));
 		} catch (err) {
 			if (err.status === 401) {

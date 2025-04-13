@@ -7,6 +7,7 @@ import {
 	HeartIcon,
 	PaperAirplaneIcon,
 	PencilSquareIcon,
+	TrashIcon,
 } from "@heroicons/react/24/outline";
 
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
@@ -22,6 +23,7 @@ const Blog = () => {
 	const [refreshLikes, setRefreshLikes] = useState(false);
 	const [numOfLikes, setNumOfLikes] = useState(null);
 	const [currLikeObj, setCurrLikeObj] = useState(null);
+	const [allLikes, setAllLikes] = useState(null);
 
 	const { blogId } = useParams();
 	const navigate = useNavigate();
@@ -60,7 +62,8 @@ const Blog = () => {
 				withCredentials: true,
 			});
 			setNumOfLikes(res?.data?.numberOfLikes);
-			setCurrLikeObj(res?.data?.like);
+			setCurrLikeObj(res?.data?.currlikeObj);
+			setAllLikes(res?.data?.likes);
 			setRefreshLikes(false);
 		} catch (err) {
 			console.error(err);
@@ -82,6 +85,19 @@ const Blog = () => {
 
 	const hadleEditBlog = () => {
 		navigate(`/blog/edit/${blog._id}`);
+	};
+
+	const handleDeleteBlog = async () => {
+		try {
+			const res = await axios.delete(BASE_URL + `/blog/delete/${blogId}`, {
+				withCredentials: true,
+			});
+			if (res?.data?.status === 1) {
+				window.location.href = "/myblogs";
+			}
+		} catch (err) {
+			console.error(err);
+		}
 	};
 
 	const handleAddComment = async () => {
@@ -109,7 +125,6 @@ const Blog = () => {
 				{},
 				{ withCredentials: true }
 			);
-			console.log(res);
 			setCurrLikeObj(res?.data?.data);
 			setRefreshLikes(true);
 		} catch (err) {
@@ -142,7 +157,9 @@ const Blog = () => {
 							</h1>
 							<div className="flex gap-4 items-center text-sm">
 								<span className="flex gap-1 items-center">
-									<p className="text-xs">{numOfLikes}</p>
+									<div className="text-xs">
+										<LikeDropdown allLikes={allLikes} numOfLikes={numOfLikes} />
+									</div>
 									<button onClick={handleLike}>
 										{currLikeObj && currLikeObj.likeStatus === "like" ? (
 											<HeartIconSolid className="w-5 h-5 cursor-pointer text-red-500" />
@@ -160,12 +177,20 @@ const Blog = () => {
 						<div className="flex gap-4 items-center">
 							<h1 className="text-lg font-bold">{blog.blogTitle}</h1>
 							{IsMyBlog && (
-								<button
-									className="btn btn-square btn-ghost"
-									onClick={hadleEditBlog}
-								>
-									<PencilSquareIcon className="h-5 w-5" />
-								</button>
+								<div className="flex gap-1 ml-auto">
+									<button
+										className="btn btn-square btn-ghost"
+										onClick={hadleEditBlog}
+									>
+										<PencilSquareIcon className="h-5 w-5" />
+									</button>
+									<button
+										className="btn btn-square btn-ghost"
+										onClick={handleDeleteBlog}
+									>
+										<TrashIcon className="h-5 w-5" />
+									</button>
+								</div>
 							)}
 						</div>
 						<p className="text-sm opacity-85">{blog.blogDescription}</p>
@@ -173,27 +198,39 @@ const Blog = () => {
 				</div>
 			)}
 
-			<div className="col-span-1 border-1 flex flex-col justify-between border-slate-700 p-2 overflow-auto">
+			<div className="col-span-1 border-1 flex flex-col justify-between border-cyan-900 p-2 overflow-auto">
 				<div>
-					<p className="text-xs">#Blog - {blog && blog.blogTitle}</p>
-					<div className="divider my-0"></div>
+					<p className="text-xs border-1 border-t-0 border-l-0 border-r-0 border-b-cyan-900 pb-1 mb-1">
+						#Blog - {blog && blog.blogTitle}
+					</p>
+					{/* <div className="divider my-0 divider-[#0E7490]"></div> */}
 					{!allComments ? (
 						<Loader />
 					) : allComments.length === 0 ? (
 						<p className="text-xs text-center">No comments yet.</p>
 					) : (
-						<div>
+						<div className="overflow-auto h-[70vh]">
 							{allComments.map((comment) => (
 								<div className="chat chat-start" key={comment._id}>
 									<div className="chat-image avatar">
-										<div className="w-6 rounded-full">
+										<div className="w-7 rounded-full">
 											<img
 												alt="User photo"
 												src={comment?.fromUserId?.profileImage?.url}
 											/>
 										</div>
 									</div>
-									<div className="chat-bubble text-xs">{comment.message}</div>
+									<div className="flex flex-col">
+										<div className="text-[10px] font-semibold text-cyan-700 mb-0.5">
+											{"@" +
+												comment?.fromUserId?.firstName +
+												"" +
+												comment?.fromUserId?.lastName}
+										</div>
+										<div className="chat-bubble text-xs py-1 w-full">
+											{comment.message}
+										</div>
+									</div>
 								</div>
 							))}
 						</div>
@@ -203,7 +240,7 @@ const Blog = () => {
 					<input
 						type="text"
 						placeholder="Add a comment..."
-						className="text-xs px-2 pr-7 py-1.5 bg-base-200 w-full border-1 border-slate-700 rounded-lg"
+						className="text-xs px-2 pr-7 py-1.5 bg-base-200 w-full border-1 border-cyan-900 rounded-lg"
 						value={dropComment}
 						onChange={(e) => setDropComment(e.target.value)}
 						onKeyDown={(e) => {
@@ -219,6 +256,33 @@ const Blog = () => {
 					/>
 				</div>
 			</div>
+		</div>
+	);
+};
+
+const LikeDropdown = ({ allLikes, numOfLikes }) => {
+	if (allLikes?.length === 0) return;
+	return (
+		<div className="dropdown dropdown-hover">
+			<div tabIndex={0} role="button" className="m-1">
+				{numOfLikes}
+			</div>
+			<ul
+				tabIndex={0}
+				className="dropdown-content menu bg-base-200 rounded-box z-1 w-28 shadow-sm border-cyan-900 border-1"
+			>
+				{allLikes?.map((like, index) => (
+					<li
+						key={like._id}
+						className={`border-cyan-900 ${
+							index === 0 ? "" : "border-t-1"
+						}  px-1 py-0.5 text-xs flex gap-1 items-center`}
+					>
+						{like?.fromUserId &&
+							like.fromUserId.firstName + " " + like.fromUserId.lastName}
+					</li>
+				))}
+			</ul>
 		</div>
 	);
 };

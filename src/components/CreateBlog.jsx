@@ -18,7 +18,7 @@ const CreateBlog = () => {
 				{ withCredentials: true }
 			);
 			console.log(res);
-			navigate("/myblogs");
+			window.location.href = "/myblogs";
 		} catch (err) {
 			console.error(err);
 			alert(err?.response?.data?.Error);

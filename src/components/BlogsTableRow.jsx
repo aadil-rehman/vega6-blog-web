@@ -11,7 +11,8 @@ import { shortenString } from "../utils/commonFunctions";
 import { useNavigate } from "react-router-dom";
 
 const BlogsTableRow = ({ blog, myblog }) => {
-	const { blogTitle, blogDescription, blogImage, authorId } = blog;
+	const { blogTitle, blogDescription, blogImage, authorId, numberOfLikes } =
+		blog;
 	const navigate = useNavigate();
 
 	const handleOpenBlog = () => {
@@ -39,7 +40,7 @@ const BlogsTableRow = ({ blog, myblog }) => {
 						{shortenString(blogDescription, 90)}
 					</p>
 				</div>
-				<div className="min-w-20">
+				<div className="flex items-center gap-2 min-w-20">
 					{myblog ? (
 						<button
 							className="btn btn-square btn-ghost"
@@ -48,9 +49,12 @@ const BlogsTableRow = ({ blog, myblog }) => {
 							<PencilSquareIcon className="h-5 w-5" />
 						</button>
 					) : (
-						<button className="btn btn-square btn-ghost">
-							<HeartIcon className="h-5 w-5" />
-						</button>
+						<div className="flex gap-1 items-center">
+							<span>{numberOfLikes}</span>
+							<button>
+								<HeartIcon className="h-5 w-5" />
+							</button>
+						</div>
 					)}
 
 					<button className="btn btn-square btn-ghost" onClick={handleOpenBlog}>
