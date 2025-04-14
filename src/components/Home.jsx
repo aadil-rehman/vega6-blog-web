@@ -33,7 +33,7 @@ const Home = () => {
 	return (
 		<div className="min-h-screen flex flex-col">
 			<Navbar />
-			<div className="flex-grow">
+			<div className="flex-grow mt-15">
 				<Outlet />
 			</div>
 			<Footer />

@@ -30,6 +30,11 @@ const MyBlogs = () => {
 	return (
 		<div className="w-[50vw] mx-auto">
 			<ul className="list bg-base-100 rounded-box shadow-md mt-5">
+				{myfeed.length === 0 && (
+					<li className="list-none text-center p-5 text-lg font-bold">
+						No Blogs Found
+					</li>
+				)}
 				{myfeed.map((blog) => (
 					<BlogsTableRow key={blog._id} blog={blog} myblog={true} />
 				))}

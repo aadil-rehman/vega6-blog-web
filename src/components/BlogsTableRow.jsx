@@ -23,7 +23,7 @@ const BlogsTableRow = ({ blog, myblog }) => {
 		navigate(`/blog/edit/${blog._id}`);
 	};
 	return (
-		<li className="list-row gap-2 bg-base-200">
+		<li className="list-row gap-4 bg-base-200">
 			<div>
 				<img className="size-10 rounded-box" src={blogImage.url} />
 			</div>

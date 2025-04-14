@@ -19,7 +19,7 @@ const Login = () => {
 				{ withCredentials: true }
 			);
 			dispatch(addUser(res?.data?.data));
-			navigate("/");
+			navigate("/feed");
 			window.location.reload();
 		} catch (err) {
 			console.error("Error" + err);
@@ -44,11 +44,18 @@ const Login = () => {
 						placeholder="Password"
 						className="input"
 					/>
+
 					<div className="card-actions justify-center">
 						<button className="btn btn-primary" onClick={handleLogin}>
 							Login
 						</button>
 					</div>
+					<p className="text-xs text-center mt-2">
+						Don't have an account?{" "}
+						<a href="/signup" className="text-blue-500">
+							Sign up
+						</a>
+					</p>
 				</div>
 			</div>
 		</div>

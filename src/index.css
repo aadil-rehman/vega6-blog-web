@@ -1,2 +1,14 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+
+
+/* Hide scrollbar while keeping the ability to scroll */
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollbar-hidden {
+    -ms-overflow-style: none; /* For IE 10+ */
+    scrollbar-width: none; /* For Firefox */
+  }

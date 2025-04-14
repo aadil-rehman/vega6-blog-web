@@ -9,21 +9,25 @@ import { Provider } from "react-redux";
 import store from "./utils/store";
 import EditBlog from "./components/EditBlog";
 import CreateBlog from "./components/CreateBlog";
+import SignUp from "./components/SignUp";
+import LandingPage from "./components/LandingPage";
 
 function App() {
 	return (
 		<Provider store={store}>
 			<BrowserRouter>
 				<Routes>
+					<Route path="/app" element={<LandingPage />}></Route>
 					<Route path="/" element={<Home />}>
-						<Route path="/login" element={<Login />}></Route>
-						<Route path="/" element={<FeedBlogs />}></Route>
+						<Route path="/feed" element={<FeedBlogs />}></Route>
 						<Route path="/blog/create" element={<CreateBlog />}></Route>
 						<Route path="/myblogs" element={<MyBlogs />}></Route>
 						<Route path="/profile" element={<Profile />}></Route>
 						<Route path="/blog/view/:blogId" element={<Blog />}></Route>
 						<Route path="/blog/edit/:blogId" element={<EditBlog />}></Route>
 					</Route>
+					<Route path="/login" element={<Login />}></Route>
+					<Route path="/signup" element={<SignUp />}></Route>
 				</Routes>
 			</BrowserRouter>
 		</Provider>

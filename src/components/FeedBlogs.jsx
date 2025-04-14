@@ -28,11 +28,18 @@ const FeedBlogs = () => {
 
 	if (!feed) return <Loader />;
 	return (
-		<div className="w-[50vw] mx-auto">
-			<ul className="list bg-base-100 rounded-box shadow-md mt-2">
-				<li className="p-4 pb-2 text-xs opacity-60 tracking-wide mb-2">
-					Catch up on what everyone’s talking about
-				</li>
+		<div className="w-[50vw] mx-auto max-h-[80vh] overflow-y-auto mt-4 scrollbar-hidden">
+			<ul className="list bg-base-100 rounded-box shadow-md mt-5">
+				{feed.length === 0 && (
+					<li className="list-none text-center p-5 text-lg font-bold">
+						No Blogs Found
+					</li>
+				)}
+				{feed.length > 0 && (
+					<li className=" text-center pb-2 text-xs opacity-60 tracking-wide mb-2">
+						Catch up on what everyone’s talking about
+					</li>
+				)}
 				{feed.map((blog) => (
 					<BlogsTableRow key={blog._id} blog={blog} />
 				))}

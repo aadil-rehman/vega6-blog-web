@@ -16,31 +16,49 @@ const Navbar = () => {
 		try {
 			await axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
 			dispatch(removeUser());
-			navigate("/login");
+			navigate("/app");
 		} catch (err) {
 			console.error("Error: " + err);
 		}
 	}
 	return (
-		<div className="navbar bg-base-300 shadow-sm">
+		<div className="navbar bg-base-300 shadow-sm fixed top-0 z-50">
 			<div className="flex-1">
-				<Link to="/" className="btn btn-ghost text-xl">
+				<Link to="/feed" className="btn btn-ghost text-xl">
 					📝 Bloggify
 				</Link>
 			</div>
 			<div className="flex gap-2">
-				{user && (
-					<div className="dropdown dropdown-end mr-2">
-						<div
-							tabIndex={0}
-							role="button"
-							className="btn btn-ghost btn-circle avatar"
+				{!user ? (
+					<div>
+						<Link
+							to="/login"
+							className="btn text-sm btn-ghost hover:btn-primary"
 						>
-							<div className="w-10 rounded-full">
-								<img
-									alt="Tailwind CSS Navbar component"
-									src={user?.profileImage?.url}
-								/>
+							Sing in{" "}
+						</Link>
+						<Link
+							to="/signup"
+							className="btn btn-ghost text-sm hover:btn-primary"
+						>
+							Sinp up{" "}
+						</Link>
+					</div>
+				) : (
+					<div className="dropdown dropdown-end mr-2">
+						<div className="flex items-center gap-3">
+							<p className="text-sm">Welcome, {user?.firstName}</p>
+							<div
+								tabIndex={0}
+								role="button"
+								className="btn btn-ghost btn-circle avatar"
+							>
+								<div className="w-10 rounded-full">
+									<img
+										alt="Tailwind CSS Navbar component"
+										src={user?.profileImage?.url}
+									/>
+								</div>
 							</div>
 						</div>
 						<ul
