@@ -11,6 +11,9 @@ import EditBlog from "./components/EditBlog";
 import CreateBlog from "./components/CreateBlog";
 import SignUp from "./components/SignUp";
 import LandingPage from "./components/LandingPage";
+import EditProfile from "./components/EditProfile";
+import UpdatePassword from "./components/UpdatePassword";
+import DeleteUserAccount from "./components/DeleteUserAccount";
 
 function App() {
 	return (
@@ -22,7 +25,20 @@ function App() {
 						<Route path="/feed" element={<FeedBlogs />}></Route>
 						<Route path="/blog/create" element={<CreateBlog />}></Route>
 						<Route path="/myblogs" element={<MyBlogs />}></Route>
-						<Route path="/profile" element={<Profile />}></Route>
+						<Route path="/profile" element={<Profile />}>
+							<Route
+								path="/profile/editProfile"
+								element={<EditProfile />}
+							></Route>
+							<Route
+								path="/profile/editPassword"
+								element={<UpdatePassword />}
+							></Route>
+							<Route
+								path="/profile/deleteAccount"
+								element={<DeleteUserAccount />}
+							></Route>
+						</Route>
 						<Route path="/blog/view/:blogId" element={<Blog />}></Route>
 						<Route path="/blog/edit/:blogId" element={<EditBlog />}></Route>
 					</Route>

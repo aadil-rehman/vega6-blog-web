@@ -25,7 +25,7 @@ const BlogsTableRow = ({ blog, myblog }) => {
 	return (
 		<li className="list-row gap-4 bg-base-200">
 			<div>
-				<img className="size-10 rounded-box" src={blogImage.url} />
+				<img className="w-20 h-12 rounded-box" src={blogImage.url} />
 			</div>
 			<div className="flex justify-between">
 				<div>

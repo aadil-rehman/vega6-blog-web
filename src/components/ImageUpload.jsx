@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { BASE_URL } from "../utils/constants";
 
-const ImageUpload = ({ profileImage, setProfileImage }) => {
+const ImageUpload = ({ image, setImage, isProfileEdit, cloudinary_folder }) => {
 	const [file, setFile] = useState(null);
 	const [loading, setLoading] = useState(false);
 
@@ -14,30 +14,38 @@ const ImageUpload = ({ profileImage, setProfileImage }) => {
 	};
 	const handleUpload = async () => {
 		if (!file) return;
-		const formDate = new FormData();
-		formDate.append("image", file);
+		const formData = new FormData();
+		formData.append("image", file);
 
 		setLoading(true);
 		try {
-			const res = await axios.post(BASE_URL + "/image/upload", formDate, {
-				withCredentials: true,
-			});
+			const res = await axios.post(
+				BASE_URL + `/image/upload/${cloudinary_folder}`,
+				formData,
+				{
+					withCredentials: true,
+				}
+			);
 			const profileDataObj = {
 				public_id: res?.data?.public_id,
 				url: res?.data?.url,
 			};
-			setProfileImage(profileDataObj);
+			console.log(profileDataObj);
+			setImage(profileDataObj);
 		} catch (err) {
 			alert("Upload failed");
-			console.error(err);
+			console.error(err?.response?.data);
 		} finally {
 			setLoading(false);
 		}
 	};
+
 	return (
 		<div className="flex flex-col items-center gap-2 mr-4 mb-2 border-1 border-slate-500/70 p-2 bg-base-100 rounded-sm">
 			<div className="flex items-center gap-2">
-				<p className="text-xs opacity-70">Upload profile image: </p>
+				{!isProfileEdit && (
+					<p className="text-xs opacity-70">Upload profile image: </p>
+				)}
 
 				<label className="cursor-pointer inline-block border border-gray-400 rounded px-3 py-1 text-xs">
 					Choose Image
@@ -54,9 +62,9 @@ const ImageUpload = ({ profileImage, setProfileImage }) => {
 					{loading ? "Uploading..." : "Upload"}
 				</button>
 			</div>
-			{profileImage && (
+			{image && (
 				<img
-					src={profileImage.url}
+					src={image.url}
 					alt="Preview"
 					className="w-24 max-w-72 h-fit object-cover border"
 				/>

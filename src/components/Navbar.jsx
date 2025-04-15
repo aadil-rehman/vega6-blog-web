@@ -72,6 +72,9 @@ const Navbar = () => {
 								<Link to="/blog/create">Create Blog</Link>
 							</li>
 							<li>
+								<Link to="/profile/editProfile">Profile</Link>
+							</li>
+							<li>
 								<Link onClick={handleLogout}>
 									Logout{" "}
 									<ArrowRightStartOnRectangleIcon className="h-5 w-5 text-gray-200" />

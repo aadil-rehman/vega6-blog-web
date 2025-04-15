@@ -2,19 +2,19 @@ import axios from "axios";
 import React, { useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
+import ImageUpload from "./ImageUpload";
 
 const CreateBlog = () => {
-	const [blogImageUrl, setBlogImageUrl] = useState("");
+	const [blogImage, setBlogImage] = useState(null);
+
 	const [blogTitle, setBlogTitle] = useState("");
 	const [blogDescription, setBlogDescription] = useState("");
-
-	const navigate = useNavigate();
 
 	const handleCreateBlog = async () => {
 		try {
 			const res = await axios.post(
 				BASE_URL + "/blog/create",
-				{ blogTitle, blogDescription, blogImage: { url: blogImageUrl } },
+				{ blogTitle, blogDescription, blogImage },
 				{ withCredentials: true }
 			);
 			console.log(res);
@@ -33,13 +33,12 @@ const CreateBlog = () => {
 						Share your thoughts with the world — create a new blog post below.
 					</h2>
 					<label className="text-xs font-bold">Blog Image</label>
-					<input
-						type="text"
-						value={blogImageUrl}
-						onChange={(e) => setBlogImageUrl(e.target.value)}
-						placeholder="Enter image url"
-						className="input text-xs w-[55vw]"
+					<ImageUpload
+						image={blogImage}
+						setImage={setBlogImage}
+						cloudinary_folder="blog"
 					/>
+
 					<label className="mt-2 text-xs font-bold">Blog Title</label>
 					<input
 						type="text"

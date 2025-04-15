@@ -41,7 +41,9 @@ const FeedBlogs = () => {
 					</li>
 				)}
 				{feed.map((blog) => (
-					<BlogsTableRow key={blog._id} blog={blog} />
+					<div key={blog._id}>
+						{blog.authorId && <BlogsTableRow key={blog._id} blog={blog} />}
+					</div>
 				))}
 			</ul>
 		</div>

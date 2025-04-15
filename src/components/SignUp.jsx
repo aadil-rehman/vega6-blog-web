@@ -39,8 +39,9 @@ const SignUp = () => {
 					</h2>
 
 					<ImageUpload
-						profileImage={profileImage}
-						setProfileImage={setProfileImage}
+						image={profileImage}
+						setImage={setProfileImage}
+						cloudinary_folder="profile"
 					/>
 					<input
 						type="text"

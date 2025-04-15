@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import ImageUpload from "./ImageUpload";
 
 const EditBlog = () => {
 	const [blog, setBlog] = useState(null);
-	const [blogImageUrl, setBlogImageUrl] = useState("");
+	const [blogImage, setBlogImage] = useState(null);
 	const [blogTitle, setBlogTitle] = useState("");
 	const [blogDescription, setBlogDescription] = useState("");
 
@@ -17,7 +18,7 @@ const EditBlog = () => {
 		try {
 			const res = await axios.patch(
 				BASE_URL + `/blog/edit/${blogId}`,
-				{ blogImage: { url: blogImageUrl }, blogTitle, blogDescription },
+				{ blogImage, blogTitle, blogDescription },
 				{ withCredentials: true }
 			);
 			console.log(res);
@@ -44,7 +45,7 @@ const EditBlog = () => {
 
 	useEffect(() => {
 		if (blog) {
-			setBlogImageUrl(blog?.blogImage?.url || "");
+			setBlogImage(blog?.blogImage);
 			setBlogTitle(blog?.blogTitle || "");
 			setBlogDescription(blog?.blogDescription || "");
 		}
@@ -56,13 +57,12 @@ const EditBlog = () => {
 				<div className="card-body opacity-85">
 					<h2 className="card-title flex justify-center">{blog?.blogTitle}</h2>
 					<label className="text-xs font-bold">Blog Image</label>
-					<input
-						type="text"
-						value={blogImageUrl}
-						onChange={(e) => setBlogImageUrl(e.target.value)}
-						placeholder="Enter image url"
-						className="input text-xs w-[55vw]"
+					<ImageUpload
+						image={blogImage}
+						setImage={setBlogImage}
+						cloudinary_folder="blog"
 					/>
+
 					<label className="mt-2 text-xs font-bold">Blog Title</label>
 					<input
 						type="text"

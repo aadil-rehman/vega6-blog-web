@@ -217,7 +217,7 @@ const Blog = () => {
 						) : (
 							<div className="flex-1 overflow-y-auto h-[70vh]">
 								{allComments.map((comment) => (
-									<>
+									<div key={comment._id}>
 										{comment?.fromUserId && (
 											<div className="chat chat-start" key={comment._id}>
 												<div className="chat-image avatar">
@@ -241,7 +241,7 @@ const Blog = () => {
 												</div>
 											</div>
 										)}
-									</>
+									</div>
 								))}
 							</div>
 						)}
@@ -283,7 +283,7 @@ const LikeDropdown = ({ allLikes, numOfLikes }) => {
 				className="dropdown-content menu bg-base-200 rounded-box z-1 w-28 shadow-sm border-cyan-900 border-1"
 			>
 				{allLikes?.map((like, index) => (
-					<>
+					<div key={like._id}>
 						{like?.fromUserId && (
 							<li
 								key={like._id}
@@ -294,7 +294,7 @@ const LikeDropdown = ({ allLikes, numOfLikes }) => {
 								{like.fromUserId.firstName + " " + like.fromUserId.lastName}
 							</li>
 						)}
-					</>
+					</div>
 				))}
 			</ul>
 		</div>
